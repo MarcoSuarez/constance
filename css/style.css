@@ -193,7 +193,7 @@ body::before {
   color: var(--ink);
   text-align: center;
   line-height: 1.15;
-  margin-bottom: 0.3rem;
+  margin-bottom: 1.5rem;
 }
 .subtitle {
   text-align: center;
