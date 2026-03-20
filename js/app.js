@@ -269,7 +269,11 @@ function getViewDate() {
   return today();
 }
 
+// Module-level current date — single source of truth for navigation
+let currentDate = null;
+
 function navigateTo(date) {
+  currentDate = date;
   const url = new URL(window.location.href);
   if (serializeDate(date) === serializeDate(today())) {
     url.searchParams.delete('date');
@@ -282,6 +286,7 @@ function navigateTo(date) {
 
 // ── Main loader ───────────────────────────────────────────────────────────────
 async function loadDay(date) {
+  currentDate = date;
   updateChrome(date);
   renderLoading();
 
@@ -304,12 +309,13 @@ async function loadDay(date) {
 // ── Boot ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('prev-day').addEventListener('click', () => {
-    navigateTo(addDays(getViewDate(), -1));
+    navigateTo(addDays(currentDate, -1));
   });
   document.getElementById('next-day').addEventListener('click', () => {
-    const next = addDays(getViewDate(), 1);
+    const next = addDays(currentDate, 1);
     if (next <= today()) navigateTo(next);
   });
   window.addEventListener('popstate', () => loadDay(getViewDate()));
-  loadDay(getViewDate());
+  currentDate = getViewDate();
+  loadDay(currentDate);
 });
