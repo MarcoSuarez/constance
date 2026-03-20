@@ -7,51 +7,47 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
-    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cinzel:wght@400;500&family=Cormorant+Upright:wght@300;400;500&display=swap"
     rel="stylesheet"
   />
 </head>
-<body>
-  <header>
-    <div class="header-inner">
-      <h1 class="site-title">Constance</h1>
-      <p class="site-subtitle">Daily Office</p>
-    </div>
-  </header>
+<body data-season="ordinary">
+  <div class="page">
 
-  <main>
-    <!-- Date Navigation -->
+    <!-- Season + Date -->
+    <div class="season-banner">
+      <span id="season-label" class="season-label">✦ Daily Office ✦</span>
+      <span id="date-line" class="date-line"></span>
+    </div>
+
+    <!-- Navigation -->
     <nav class="date-nav" aria-label="Day navigation">
-      <button id="prev-day" class="nav-btn" aria-label="Previous day" title="Previous day">
-        &#8592;
-      </button>
-      <div class="date-display">
-        <div id="liturgical-season" class="season-label"></div>
-        <h2 id="current-date" class="date-heading"></h2>
-      </div>
-      <button id="next-day" class="nav-btn" aria-label="Next day" title="Next day" disabled>
-        &#8594;
-      </button>
+      <button id="prev-day" class="nav-btn" aria-label="Previous day">← Previous</button>
+      <button id="next-day" class="nav-btn" aria-label="Next day" disabled>Next →</button>
     </nav>
 
-    <!-- Main Content -->
-    <div id="content" class="daily-content">
+    <!-- Title -->
+    <div class="title-cross">✝</div>
+    <h1 class="main-title">Daily Office</h1>
+    <p id="subtitle" class="subtitle">A Rule of Prayer for Every Day</p>
+
+    <!-- Seasonal Note -->
+    <div id="seasonal-note" class="seasonal-note" style="display:none;"></div>
+
+    <!-- Dynamic content: Scripture, Liturgy, Prayer -->
+    <div id="content">
       <div class="loading-state">
         <div class="loading-spinner"></div>
         <p>Loading today's readings…</p>
       </div>
     </div>
-  </main>
 
-  <footer>
-    <p>
-      Scripture from the
-      <abbr title="World English Bible — a modern public-domain translation">WEB</abbr>
-      via <a href="https://bible-api.com" target="_blank" rel="noopener">bible-api.com</a>.
-      Liturgy from the Heidelberg &amp; Westminster Shorter Catechisms.
-      Prayers from the <em>Book of Common Prayer</em>.
-    </p>
-  </footer>
+    <!-- Footer -->
+    <div class="page-footer">
+      <p class="footer-text">Soli Deo Gloria &nbsp;✦&nbsp; The Lord's Prayer closes the Office</p>
+    </div>
+
+  </div>
 
   <script src="js/calendar.js"></script>
   <script src="js/schedule.js"></script>

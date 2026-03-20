@@ -1,293 +1,380 @@
 /* ===================================================
    Constance — Daily Office
+   Design inspired by the illuminated manuscript tradition
    =================================================== */
 
-/* --- Reset & Base --- */
+/* --- Reset --- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --cream:    #faf8f3;
-  --parchment:#f0ebe0;
-  --ink:      #1e1b16;
-  --muted:    #6b6457;
-  --accent:   #7a4f2e;
-  --accent-light: #c49a6c;
-  --border:   #ddd5c4;
-  --section-bg: #ffffff;
-  --shadow:   0 2px 12px rgba(30,27,22,.08);
-
-  --font-serif: 'Playfair Display', Georgia, serif;
-  --font-body:  'Source Serif 4', Georgia, serif;
-  --font-ui:    'Inter', system-ui, sans-serif;
-
-  --max-width: 720px;
-  --space:     1.5rem;
+/* --- Season-aware colour tokens --- */
+:root,
+[data-season="ordinary"] {
+  --bg-deep:      #1a2a1a;
+  --bg-accent:    #2d4a2d;
+  --season-color: #2d4a2d;
+  --season-gold:  #b8912a;
+  --season-ash:   #8a8078;
+  --rule:         #c4b49a;
+  --parchment:    #f5f0e8;
+  --ink:          #1c1008;
+}
+[data-season="advent"] {
+  --bg-deep:      #0d1f3c;
+  --bg-accent:    #1e3a6e;
+  --season-color: #1e3a6e;
+  --season-gold:  #c4a44a;
+}
+[data-season="christmas"] {
+  --bg-deep:      #2a0808;
+  --bg-accent:    #5a1515;
+  --season-color: #5a1515;
+  --season-gold:  #d4af37;
+}
+[data-season="epiphany"] {
+  --bg-deep:      #0a1a2a;
+  --bg-accent:    #1a3a5a;
+  --season-color: #1a3a5a;
+  --season-gold:  #c4a44a;
+}
+[data-season="lent"] {
+  --bg-deep:      #2d1540;
+  --bg-accent:    #4a2560;
+  --season-color: #4a2560;
+  --season-gold:  #b8912a;
+}
+[data-season="holy-week"] {
+  --bg-deep:      #1a0505;
+  --bg-accent:    #3d0000;
+  --season-color: #3d0000;
+  --season-gold:  #8b6914;
+}
+[data-season="easter"] {
+  --bg-deep:      #0a2a14;
+  --bg-accent:    #1a5c30;
+  --season-color: #1a5c30;
+  --season-gold:  #c4a44a;
+}
+[data-season="pentecost"] {
+  --bg-deep:      #2a0a0a;
+  --bg-accent:    #6b1a1a;
+  --season-color: #6b1a1a;
+  --season-gold:  #d4af37;
 }
 
-html { font-size: 17px; scroll-behavior: smooth; }
+/* --- Base --- */
+html { font-size: 17px; }
 
 body {
-  background: var(--cream);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-weight: 300;
-  line-height: 1.75;
+  background: var(--bg-deep);
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1rem 3rem;
+  font-family: 'EB Garamond', Georgia, serif;
+  transition: background 0.6s ease;
 }
 
-/* --- Header --- */
-header {
-  background: var(--ink);
-  color: var(--cream);
-  padding: 2.5rem var(--space) 2rem;
-  text-align: center;
+/* Textured atmospheric background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(255,255,255,0.04) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(0,0,0,0.3) 0%, transparent 60%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 0;
 }
 
-.header-inner { max-width: var(--max-width); margin: 0 auto; }
-
-.site-title {
-  font-family: var(--font-serif);
-  font-size: clamp(2rem, 6vw, 3rem);
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: var(--accent-light);
-}
-
-.site-subtitle {
-  font-family: var(--font-ui);
-  font-size: .8rem;
-  font-weight: 300;
-  letter-spacing: .25em;
-  text-transform: uppercase;
-  color: #a89880;
-  margin-top: .3rem;
-}
-
-/* --- Main --- */
-main {
-  flex: 1;
-  max-width: var(--max-width);
+/* --- Parchment card --- */
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
   width: 100%;
-  margin: 0 auto;
-  padding: 2rem var(--space) 3rem;
+  background: var(--parchment);
+  border: 1px solid var(--rule);
+  padding: 3.5rem 3rem;
+  box-shadow:
+    0 0 0 5px var(--season-color),
+    0 0 0 7px var(--season-gold),
+    0 30px 80px rgba(0,0,0,0.6);
+  animation: fadeUp 1.2s ease forwards;
+  opacity: 0;
+  transition: box-shadow 0.6s ease;
 }
 
-/* --- Date Navigation --- */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Corner ornaments */
+.page::before, .page::after {
+  content: '✦';
+  position: absolute;
+  color: var(--season-gold);
+  font-size: 1.1rem;
+  opacity: 0.7;
+  transition: color 0.6s ease;
+}
+.page::before { top: 1rem;    left: 1.2rem; }
+.page::after  { bottom: 1rem; right: 1.2rem; }
+
+/* --- Season banner --- */
+.season-banner {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+.season-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.35em;
+  color: var(--season-color);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.4rem;
+  transition: color 0.6s ease;
+}
+.date-line {
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--season-ash);
+  text-transform: uppercase;
+}
+
+/* --- Navigation --- */
 .date-nav {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
-  padding-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border);
+  justify-content: center;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
-
 .nav-btn {
   background: none;
-  border: 1px solid var(--border);
-  border-radius: 50%;
-  width: 2.4rem;
-  height: 2.4rem;
-  font-size: 1.1rem;
-  color: var(--accent);
+  border: 1px solid var(--rule);
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--season-color);
+  padding: 0.35rem 0.9rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .15s, border-color .15s, opacity .15s;
-  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s, opacity 0.15s;
 }
-
 .nav-btn:hover:not(:disabled) {
-  background: var(--parchment);
-  border-color: var(--accent);
+  background: var(--season-color);
+  color: var(--parchment);
 }
-
 .nav-btn:disabled {
-  opacity: .25;
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
-.date-display { text-align: center; }
-
-.season-label {
-  font-family: var(--font-ui);
-  font-size: .72rem;
-  font-weight: 500;
-  letter-spacing: .2em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: .3rem;
+/* --- Title area --- */
+.title-cross {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--season-color);
+  opacity: 0.5;
+  line-height: 1;
+  margin: 0.5rem 0 1.2rem;
+  transition: color 0.6s ease;
 }
-
-.date-heading {
-  font-family: var(--font-serif);
-  font-size: clamp(1.15rem, 4vw, 1.5rem);
-  font-weight: 400;
+.main-title {
+  font-family: 'Cormorant Upright', serif;
+  font-size: 2.6rem;
+  font-weight: 300;
   color: var(--ink);
+  text-align: center;
+  line-height: 1.15;
+  margin-bottom: 0.3rem;
+}
+.subtitle {
+  text-align: center;
+  font-style: italic;
+  color: var(--season-ash);
+  font-size: 1.05rem;
+  margin-bottom: 1.8rem;
 }
 
-/* --- Daily Content Sections --- */
-.daily-content { display: flex; flex-direction: column; gap: 1.75rem; }
-
-.reading-section {
-  background: var(--section-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 1.75rem 2rem;
-  box-shadow: var(--shadow);
+/* --- Seasonal note --- */
+.seasonal-note {
+  background: rgba(0,0,0,0.05);
+  border-left: 2px solid var(--season-color);
+  padding: 0.8rem 1rem;
+  margin-bottom: 1.6rem;
+  font-size: 0.92rem;
+  color: var(--season-ash);
+  font-style: italic;
+  line-height: 1.65;
+  transition: border-color 0.6s ease;
 }
 
-.section-label {
-  font-family: var(--font-ui);
-  font-size: .68rem;
-  font-weight: 500;
-  letter-spacing: .22em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: .9rem;
+/* --- Divider rule --- */
+.rule {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 1.8rem 0;
+  position: relative;
+}
+.rule::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--parchment);
+  padding: 0 0.5rem;
+  color: var(--season-gold);
+  font-size: 0.75rem;
+  transition: color 0.6s ease;
+}
+
+/* --- Sections --- */
+.section {
+  animation: fadeUp 1.2s ease forwards;
+  opacity: 0;
+}
+.section:nth-child(1) { animation-delay: 0.3s; }
+.section:nth-child(2) { animation-delay: 0.6s; }
+.section:nth-child(3) { animation-delay: 0.9s; }
+
+.section-header {
   display: flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
 }
-
-.section-label::before {
-  content: '';
-  display: inline-block;
-  width: 18px;
-  height: 1px;
-  background: var(--accent-light);
+.section-icon {
+  width: 28px;
+  height: 28px;
+  background: var(--season-color);
+  color: var(--parchment);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  transition: background 0.6s ease;
+}
+.section-title {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--season-color);
+  text-transform: uppercase;
+  transition: color 0.6s ease;
 }
 
 /* --- Scripture --- */
-.scripture-citation {
-  font-family: var(--font-serif);
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: .9rem;
+.passage {
+  margin-bottom: 1.2rem;
 }
-
-.scripture-text {
-  font-family: var(--font-body);
-  font-size: 1rem;
+.passage p {
+  font-size: 1.05rem;
   line-height: 1.85;
   color: var(--ink);
-  font-style: italic;
+}
+.citation {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.62rem;
+  letter-spacing: 0.15em;
+  color: var(--season-gold);
+  margin-top: 0.4rem;
+  text-transform: uppercase;
+  transition: color 0.6s ease;
 }
 
-.scripture-text .verse-num {
-  font-style: normal;
-  font-size: .7rem;
-  font-weight: 500;
-  color: var(--muted);
-  vertical-align: super;
-  margin-right: .15rem;
-}
-
-.word-count {
-  font-family: var(--font-ui);
-  font-size: .7rem;
-  color: var(--muted);
-  margin-top: .75rem;
-  text-align: right;
-}
-
-/* --- Catechism / Liturgy --- */
-.catechism-source {
-  font-family: var(--font-ui);
-  font-size: .75rem;
-  color: var(--muted);
-  margin-bottom: .75rem;
-}
-
-.catechism-question {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
+/* --- Liturgy / Catechism --- */
+.liturgy-text {
+  font-size: 1.05rem;
+  line-height: 1.85;
   color: var(--ink);
-  margin-bottom: .6rem;
-  line-height: 1.5;
 }
-
-.catechism-answer {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.8;
-  color: var(--ink);
+.liturgy-source {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--season-gold);
+  margin-top: 0.6rem;
+  text-transform: uppercase;
+  transition: color 0.6s ease;
 }
 
 /* --- Prayer --- */
-.prayer-title {
-  font-family: var(--font-serif);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--ink);
-  margin-bottom: .75rem;
-}
-
 .prayer-text {
-  font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.85;
+  font-size: 1.05rem;
+  line-height: 1.9;
   color: var(--ink);
   font-style: italic;
 }
-
-/* --- Loading State --- */
-.loading-state {
-  text-align: center;
-  padding: 4rem 0;
-  color: var(--muted);
-  font-family: var(--font-ui);
-  font-size: .9rem;
+.prayer-source {
+  display: block;
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--season-gold);
+  margin-top: 0.6rem;
+  text-transform: uppercase;
+  font-style: normal;
+  transition: color 0.6s ease;
 }
 
+/* --- Loading / Error --- */
+.loading-state {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--season-ash);
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
 .loading-spinner {
-  width: 28px;
-  height: 28px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent);
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--rule);
+  border-top-color: var(--season-gold);
   border-radius: 50%;
   animation: spin .8s linear infinite;
   margin: 0 auto 1rem;
 }
-
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* --- Error State --- */
 .error-state {
-  background: #fff5f5;
-  border: 1px solid #f5c6c6;
-  border-radius: 6px;
-  padding: 1.5rem 2rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
   color: #8b3a3a;
-  font-family: var(--font-ui);
-  font-size: .9rem;
   text-align: center;
+  padding: 2rem 0;
 }
 
 /* --- Footer --- */
-footer {
-  background: var(--parchment);
-  border-top: 1px solid var(--border);
+.page-footer {
   text-align: center;
-  padding: 1.25rem var(--space);
-  font-family: var(--font-ui);
-  font-size: .75rem;
-  color: var(--muted);
-  line-height: 1.6;
+  margin-top: 2rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--rule);
 }
-
-footer a { color: var(--accent); text-decoration: none; }
-footer a:hover { text-decoration: underline; }
+.footer-text {
+  font-family: 'Cinzel', serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.25em;
+  color: var(--season-ash);
+  text-transform: uppercase;
+}
 
 /* --- Responsive --- */
 @media (max-width: 520px) {
-  .reading-section { padding: 1.25rem 1.1rem; }
-  header { padding: 2rem 1rem 1.5rem; }
-  main { padding: 1.5rem 1rem 2.5rem; }
+  .page { padding: 2.5rem 1.5rem; }
+  .main-title { font-size: 2rem; }
+  body { padding: 1rem 0.75rem 2rem; }
 }
