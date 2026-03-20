@@ -238,8 +238,6 @@ function updateChrome(date) {
   document.getElementById('season-label').textContent =
     formatSeasonLabel(info.season, info.weekNumber);
 
-  // Subtitle
-  document.getElementById('subtitle').textContent = meta.subtitle;
 
   // Seasonal note
   const noteEl = document.getElementById('seasonal-note');
