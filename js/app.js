@@ -6,10 +6,13 @@
 'use strict';
 
 // ── Configuration ─────────────────────────────────────────────────────────────
-const API_KEY  = 'TfIjkuIkQmfUamh94epMe';
-const BIBLE_ID = '78a9f6124f344018-01'; // NIV 2011
-const API_BASE = 'https://rest.api.bible/v1';
-const MAX_WORDS = 200;
+// bible-api.com is CORS-enabled and works directly in the browser (no key needed).
+// Translation: 'web' = World English Bible (modern, public domain).
+// Note: rest.api.bible (NIV) does not send CORS headers and cannot be called
+// from a browser — it works only from server-side code.
+const BIBLE_API_BASE = 'https://bible-api.com';
+const TRANSLATION    = 'web';
+const MAX_WORDS      = 200;
 
 // ── Season metadata ───────────────────────────────────────────────────────────
 const SEASON_META = {
@@ -109,58 +112,25 @@ function getSeasonMeta(season) {
   return SEASON_META[season] || SEASON_META['Ordinary Time'];
 }
 
-// ── Book name → OSIS code ─────────────────────────────────────────────────────
-const BOOK_CODES = {
-  'genesis':'GEN','exodus':'EXO','leviticus':'LEV','numbers':'NUM',
-  'deuteronomy':'DEU','joshua':'JOS','judges':'JDG','ruth':'RUT',
-  '1 samuel':'1SA','2 samuel':'2SA','1 kings':'1KI','2 kings':'2KI',
-  '1 chronicles':'1CH','2 chronicles':'2CH','ezra':'EZR','nehemiah':'NEH',
-  'esther':'EST','job':'JOB','psalm':'PSA','psalms':'PSA','proverbs':'PRO',
-  'ecclesiastes':'ECC','song of solomon':'SNG','song of songs':'SNG',
-  'isaiah':'ISA','jeremiah':'JER','lamentations':'LAM','ezekiel':'EZK',
-  'daniel':'DAN','hosea':'HOS','joel':'JOL','amos':'AMO','obadiah':'OBA',
-  'jonah':'JON','micah':'MIC','nahum':'NAM','habakkuk':'HAB',
-  'zephaniah':'ZEP','haggai':'HAG','zechariah':'ZEC','malachi':'MAL',
-  'matthew':'MAT','mark':'MRK','luke':'LUK','john':'JHN','acts':'ACT',
-  'romans':'ROM','1 corinthians':'1CO','2 corinthians':'2CO',
-  'galatians':'GAL','ephesians':'EPH','philippians':'PHP','colossians':'COL',
-  '1 thessalonians':'1TH','2 thessalonians':'2TH',
-  '1 timothy':'1TI','2 timothy':'2TI','titus':'TIT','philemon':'PHM',
-  'hebrews':'HEB','james':'JAS','1 peter':'1PE','2 peter':'2PE',
-  '1 john':'1JN','2 john':'2JN','3 john':'3JN','jude':'JUD',
-  'revelation':'REV',
-};
-
-function refToPassageId(ref) {
-  ref = ref.split(',')[0].trim();
-  const m = ref.match(/^(.+?)\s+(\d+)(?::(\d+))?(?:\s*[-–]\s*(?:(\d+):)?(\d+))?$/i);
-  if (!m) return null;
-  const code = BOOK_CODES[m[1].toLowerCase().trim()];
-  if (!code) return null;
-  const ch1 = m[2], v1 = m[3], ch2 = m[4], v2 = m[5];
-  if (!v1 && !v2) return `${code}.${ch1}`;
-  const start = `${code}.${ch1}.${v1}`;
-  if (!v2) return start;
-  return `${start}-${code}.${ch2 || ch1}.${v2}`;
-}
-
 // ── Scripture fetcher ──────────────────────────────────────────────────────────
+// bible-api.com accepts natural references like "john 3:16" or "romans 8:1-11"
 const scriptureCache = {};
 
 async function fetchPassage(ref) {
   if (scriptureCache[ref]) return scriptureCache[ref];
-  const passageId = refToPassageId(ref);
-  if (!passageId) throw new Error(`Could not parse reference: "${ref}"`);
 
-  const url = `${API_BASE}/bibles/${BIBLE_ID}/passages/${passageId}` +
-    `?content-type=text&include-verse-numbers=false` +
-    `&include-titles=false&include-chapter-numbers=false`;
+  // Encode the reference for the URL (spaces → +, colons/commas are fine)
+  const encoded = encodeURIComponent(ref.replace(/\s+/g, '+').replace(/%2B/g, '+'));
+  const url = `${BIBLE_API_BASE}/${encoded}?translation=${TRANSLATION}`;
 
-  const res = await fetch(url, { headers: { 'api-key': API_KEY } });
-  if (!res.ok) throw new Error(`Scripture API error ${res.status}`);
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Scripture API error ${res.status} for "${ref}"`);
 
   const json = await res.json();
-  let text = (json.data.content || '').trim()
+
+  // bible-api.com returns { verses: [{text, book_name, chapter, verse}, ...], text }
+  let text = (json.text || '').trim()
+    .replace(/\r\n/g, '\n')
     .replace(/[ \t]+/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
@@ -222,7 +192,7 @@ function renderContent({ citation, scriptureText, catechism, prayer, season }) {
       </div>
       <div class="passage">
         ${scriptureParas}
-        <span class="citation">${escHtml(citation)} (NIV)</span>
+        <span class="citation">${escHtml(citation)} (WEB)</span>
       </div>
     </div>
 
