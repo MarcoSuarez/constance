@@ -119,9 +119,9 @@ const scriptureCache = {};
 async function fetchPassage(ref) {
   if (scriptureCache[ref]) return scriptureCache[ref];
 
-  // Encode the reference for the URL (spaces → +, colons/commas are fine)
-  const encoded = encodeURIComponent(ref.replace(/\s+/g, '+').replace(/%2B/g, '+'));
-  const url = `${BIBLE_API_BASE}/${encoded}?translation=${TRANSLATION}`;
+  // bible-api.com accepts spaces as + and colons/hyphens unencoded
+  const urlRef = ref.replace(/\s+/g, '+');
+  const url = `${BIBLE_API_BASE}/${urlRef}?translation=${TRANSLATION}`;
 
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Scripture API error ${res.status} for "${ref}"`);
