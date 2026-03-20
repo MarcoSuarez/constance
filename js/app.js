@@ -263,11 +263,10 @@ function updateChrome(date) {
   // Season class on body (drives all colour variables)
   document.body.dataset.season = meta.cssClass;
 
-  // Season label + date
+  // Date as main title, season label beneath it
+  document.getElementById('main-title').textContent = formatDate(date);
   document.getElementById('season-label').textContent =
     formatSeasonLabel(info.season, info.weekNumber);
-  document.getElementById('date-line').textContent =
-    formatDate(date).toUpperCase();
 
   // Subtitle
   document.getElementById('subtitle').textContent = meta.subtitle;
