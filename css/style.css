@@ -1,0 +1,293 @@
+/* ===================================================
+   Constance — Daily Office
+   =================================================== */
+
+/* --- Reset & Base --- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream:    #faf8f3;
+  --parchment:#f0ebe0;
+  --ink:      #1e1b16;
+  --muted:    #6b6457;
+  --accent:   #7a4f2e;
+  --accent-light: #c49a6c;
+  --border:   #ddd5c4;
+  --section-bg: #ffffff;
+  --shadow:   0 2px 12px rgba(30,27,22,.08);
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-body:  'Source Serif 4', Georgia, serif;
+  --font-ui:    'Inter', system-ui, sans-serif;
+
+  --max-width: 720px;
+  --space:     1.5rem;
+}
+
+html { font-size: 17px; scroll-behavior: smooth; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-weight: 300;
+  line-height: 1.75;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- Header --- */
+header {
+  background: var(--ink);
+  color: var(--cream);
+  padding: 2.5rem var(--space) 2rem;
+  text-align: center;
+}
+
+.header-inner { max-width: var(--max-width); margin: 0 auto; }
+
+.site-title {
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--accent-light);
+}
+
+.site-subtitle {
+  font-family: var(--font-ui);
+  font-size: .8rem;
+  font-weight: 300;
+  letter-spacing: .25em;
+  text-transform: uppercase;
+  color: #a89880;
+  margin-top: .3rem;
+}
+
+/* --- Main --- */
+main {
+  flex: 1;
+  max-width: var(--max-width);
+  width: 100%;
+  margin: 0 auto;
+  padding: 2rem var(--space) 3rem;
+}
+
+/* --- Date Navigation --- */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 2.4rem;
+  height: 2.4rem;
+  font-size: 1.1rem;
+  color: var(--accent);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s, border-color .15s, opacity .15s;
+  flex-shrink: 0;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background: var(--parchment);
+  border-color: var(--accent);
+}
+
+.nav-btn:disabled {
+  opacity: .25;
+  cursor: not-allowed;
+}
+
+.date-display { text-align: center; }
+
+.season-label {
+  font-family: var(--font-ui);
+  font-size: .72rem;
+  font-weight: 500;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .3rem;
+}
+
+.date-heading {
+  font-family: var(--font-serif);
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  font-weight: 400;
+  color: var(--ink);
+}
+
+/* --- Daily Content Sections --- */
+.daily-content { display: flex; flex-direction: column; gap: 1.75rem; }
+
+.reading-section {
+  background: var(--section-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 1.75rem 2rem;
+  box-shadow: var(--shadow);
+}
+
+.section-label {
+  font-family: var(--font-ui);
+  font-size: .68rem;
+  font-weight: 500;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: .9rem;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.section-label::before {
+  content: '';
+  display: inline-block;
+  width: 18px;
+  height: 1px;
+  background: var(--accent-light);
+}
+
+/* --- Scripture --- */
+.scripture-citation {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .9rem;
+}
+
+.scripture-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink);
+  font-style: italic;
+}
+
+.scripture-text .verse-num {
+  font-style: normal;
+  font-size: .7rem;
+  font-weight: 500;
+  color: var(--muted);
+  vertical-align: super;
+  margin-right: .15rem;
+}
+
+.word-count {
+  font-family: var(--font-ui);
+  font-size: .7rem;
+  color: var(--muted);
+  margin-top: .75rem;
+  text-align: right;
+}
+
+/* --- Catechism / Liturgy --- */
+.catechism-source {
+  font-family: var(--font-ui);
+  font-size: .75rem;
+  color: var(--muted);
+  margin-bottom: .75rem;
+}
+
+.catechism-question {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .6rem;
+  line-height: 1.5;
+}
+
+.catechism-answer {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--ink);
+}
+
+/* --- Prayer --- */
+.prayer-title {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .75rem;
+}
+
+.prayer-text {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.85;
+  color: var(--ink);
+  font-style: italic;
+}
+
+/* --- Loading State --- */
+.loading-state {
+  text-align: center;
+  padding: 4rem 0;
+  color: var(--muted);
+  font-family: var(--font-ui);
+  font-size: .9rem;
+}
+
+.loading-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* --- Error State --- */
+.error-state {
+  background: #fff5f5;
+  border: 1px solid #f5c6c6;
+  border-radius: 6px;
+  padding: 1.5rem 2rem;
+  color: #8b3a3a;
+  font-family: var(--font-ui);
+  font-size: .9rem;
+  text-align: center;
+}
+
+/* --- Footer --- */
+footer {
+  background: var(--parchment);
+  border-top: 1px solid var(--border);
+  text-align: center;
+  padding: 1.25rem var(--space);
+  font-family: var(--font-ui);
+  font-size: .75rem;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+footer a { color: var(--accent); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+
+/* --- Responsive --- */
+@media (max-width: 520px) {
+  .reading-section { padding: 1.25rem 1.1rem; }
+  header { padding: 2rem 1rem 1.5rem; }
+  main { padding: 1.5rem 1rem 2.5rem; }
+}

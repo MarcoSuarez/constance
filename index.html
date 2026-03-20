@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Constance — Daily Office</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <h1 class="site-title">Constance</h1>
+      <p class="site-subtitle">Daily Office</p>
+    </div>
+  </header>
+
+  <main>
+    <!-- Date Navigation -->
+    <nav class="date-nav" aria-label="Day navigation">
+      <button id="prev-day" class="nav-btn" aria-label="Previous day" title="Previous day">
+        &#8592;
+      </button>
+      <div class="date-display">
+        <div id="liturgical-season" class="season-label"></div>
+        <h2 id="current-date" class="date-heading"></h2>
+      </div>
+      <button id="next-day" class="nav-btn" aria-label="Next day" title="Next day" disabled>
+        &#8594;
+      </button>
+    </nav>
+
+    <!-- Main Content -->
+    <div id="content" class="daily-content">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading today's readings…</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>
+      Scripture from the
+      <abbr title="World English Bible — a modern public-domain translation">WEB</abbr>
+      via <a href="https://bible-api.com" target="_blank" rel="noopener">bible-api.com</a>.
+      Liturgy from the Heidelberg &amp; Westminster Shorter Catechisms.
+      Prayers from the <em>Book of Common Prayer</em>.
+    </p>
+  </footer>
+
+  <script src="js/calendar.js"></script>
+  <script src="js/schedule.js"></script>
+  <script src="js/catechism.js"></script>
+  <script src="js/prayers.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
