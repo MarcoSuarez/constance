@@ -44,6 +44,17 @@ function sameDay(a, b) {
 }
 
 /**
+ * Count whole calendar days from `earlier` to `later`.
+ * Uses UTC noon to avoid DST ambiguity — gives the same answer
+ * on every reload, in every timezone.
+ */
+function daysBetween(earlier, later) {
+  const e = Date.UTC(earlier.getFullYear(), earlier.getMonth(), earlier.getDate(), 12);
+  const l = Date.UTC(later.getFullYear(),   later.getMonth(),   later.getDate(),   12);
+  return Math.round((l - e) / 864e5);
+}
+
+/**
  * Return the first day of Advent for the given *civil* year.
  * Advent begins on the Sunday nearest November 30.
  */
@@ -96,20 +107,18 @@ function getLiturgicalInfo(date) {
   const christmas = new Date(year, 11, 25);
   const dec24     = new Date(year, 11, 24);
   if (d >= cur.advent && d <= dec24) {
-    const dayIndex  = Math.floor((d - cur.advent) / 864e5);
+    const dayIndex   = daysBetween(cur.advent, d);
     const weekNumber = Math.floor(dayIndex / 7) + 1;
     return { season: 'Advent', weekNumber, dayIndex, liturgicalYear: liturgicalYear(year + 1) };
   }
 
   // ── Christmas (Dec 25 – Jan 5) ──
-  const jan5 = new Date(year, 0, 5);
   const prevChristmas = new Date(year - 1, 11, 25);
   if (sameDay(d, christmas) || (d.getMonth() === 11 && d.getDate() === 25)) {
     return { season: 'Christmas', weekNumber: 1, dayIndex: 0, liturgicalYear: liturgicalYear(year) };
   }
   if (d.getMonth() === 0 && d.getDate() <= 5) {
-    // Jan 1–5: still Christmas season of prior year's Advent cycle
-    const dayIndex = Math.floor((d - prevChristmas) / 864e5);
+    const dayIndex = daysBetween(prevChristmas, d);
     return { season: 'Christmas', weekNumber: 1, dayIndex, liturgicalYear: liturgicalYear(year) };
   }
 
@@ -121,21 +130,21 @@ function getLiturgicalInfo(date) {
   // ── Ordinary Time (Epiphany season: Jan 7 → Ash Wednesday) ──
   const jan7 = new Date(year, 0, 7);
   if (d >= jan7 && d < cur.ashWed) {
-    const dayIndex   = Math.floor((d - jan7) / 864e5);
+    const dayIndex   = daysBetween(jan7, d);
     const weekNumber = Math.floor(dayIndex / 7) + 1;
     return { season: 'Epiphany Season', weekNumber, dayIndex, liturgicalYear: liturgicalYear(year) };
   }
 
   // ── Lent (Ash Wednesday → Palm Sunday, exclusive) ──
   if (d >= cur.ashWed && d < cur.palmSunday) {
-    const dayIndex   = Math.floor((d - cur.ashWed) / 864e5);
+    const dayIndex   = daysBetween(cur.ashWed, d);
     const weekNumber = Math.floor(dayIndex / 7) + 1;
     return { season: 'Lent', weekNumber, dayIndex, liturgicalYear: liturgicalYear(year) };
   }
 
   // ── Holy Week (Palm Sunday → Holy Saturday) ──
   if (d >= cur.palmSunday && d < cur.easter) {
-    const dayIndex = Math.floor((d - cur.palmSunday) / 864e5);
+    const dayIndex = daysBetween(cur.palmSunday, d);
     const names = ['Palm Sunday','Holy Monday','Holy Tuesday','Holy Wednesday',
                    'Maundy Thursday','Good Friday','Holy Saturday'];
     return { season: names[dayIndex] || 'Holy Week', weekNumber: 1, dayIndex, liturgicalYear: liturgicalYear(year) };
@@ -143,7 +152,7 @@ function getLiturgicalInfo(date) {
 
   // ── Easter (Easter Sunday → Day before Pentecost) ──
   if (d >= cur.easter && d < cur.pentecost) {
-    const dayIndex   = Math.floor((d - cur.easter) / 864e5);
+    const dayIndex   = daysBetween(cur.easter, d);
     const weekNumber = Math.floor(dayIndex / 7) + 1;
     const season = sameDay(d, cur.easter) ? 'Easter Sunday' :
                    sameDay(d, cur.ascension) ? 'Ascension Day' : 'Eastertide';
@@ -152,7 +161,7 @@ function getLiturgicalInfo(date) {
 
   // ── Ordinary Time (after Pentecost → before next Advent) ──
   if (d >= cur.pentecost && d < cur.advent) {
-    const dayIndex   = Math.floor((d - cur.pentecost) / 864e5);
+    const dayIndex   = daysBetween(cur.pentecost, d);
     const weekNumber = Math.floor(dayIndex / 7) + 1;
     const season = sameDay(d, cur.pentecost) ? 'Pentecost Sunday' :
                    sameDay(d, cur.trinity) ? 'Trinity Sunday' : 'Ordinary Time';

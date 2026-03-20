@@ -144,7 +144,8 @@ async function fetchPassage(ref) {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function dayOfYear(date) {
-  return Math.floor((date - new Date(date.getFullYear(), 0, 0)) / 864e5);
+  // Use daysBetween (defined in calendar.js) so DST never shifts the count
+  return daysBetween(new Date(date.getFullYear(), 0, 0), date);
 }
 
 function escHtml(str) {
