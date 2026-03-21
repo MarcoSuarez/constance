@@ -135,9 +135,6 @@ async function fetchPassage(ref) {
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
-  const words = text.split(/\s+/);
-  if (words.length > MAX_WORDS) text = words.slice(0, MAX_WORDS).join(' ') + '…';
-
   scriptureCache[ref] = text;
   return text;
 }
