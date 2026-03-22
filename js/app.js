@@ -186,7 +186,7 @@ function renderContent({ citation, scriptureText, catechism, prayer, season }) {
     <div class="section">
       <div class="section-header">
         <div class="section-icon">✦</div>
-        <span class="section-title">Holy Scripture</span>
+        <span class="section-title">Scripture</span>
       </div>
       <div class="passage">
         ${scriptureParas}
