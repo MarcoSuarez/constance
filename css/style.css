@@ -385,5 +385,5 @@ body::before {
 @media (max-width: 520px) {
   .page { padding: 2.5rem 1.5rem; }
   .main-title { font-size: 2rem; }
-  body { padding: 1rem 0.75rem 2rem; }
+  body { padding: 2rem 1.5rem 3rem; }
 }
