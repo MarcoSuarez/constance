@@ -237,11 +237,11 @@ function updateChrome(date) {
   if (video.dataset.current !== src) {
     video.dataset.current = src;
     video.classList.remove('loaded');
+    video.muted = true;
     video.src = src;
     video.load();
     video.oncanplay = () => {
-      video.play().catch(() => {});
-      video.classList.add('loaded');
+      video.play().then(() => video.classList.add('loaded')).catch(() => {});
     };
     video.onerror = () => video.classList.remove('loaded');
   }
