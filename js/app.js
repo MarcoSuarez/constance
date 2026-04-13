@@ -231,21 +231,6 @@ function updateChrome(date) {
   // Season class on body (drives all colour variables)
   document.body.dataset.season = meta.cssClass;
 
-  // Swap background video if one exists for this season
-  const video = document.getElementById('bg-video');
-  const src = `videos/${meta.cssClass}.mp4`;
-  if (video.dataset.current !== src) {
-    video.dataset.current = src;
-    video.classList.remove('loaded');
-    video.muted = true;
-    video.src = src;
-    video.load();
-    video.oncanplay = () => {
-      video.play().then(() => video.classList.add('loaded')).catch(() => {});
-    };
-    video.onerror = () => video.classList.remove('loaded');
-  }
-
   // Date as main title, season label beneath it
   document.getElementById('main-title').textContent = formatDate(date);
   document.getElementById('season-label').textContent =
